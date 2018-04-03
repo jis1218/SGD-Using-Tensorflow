@@ -8,11 +8,13 @@ Created on 2018. 3. 28.
 import tensorflow as tf
 import numpy as np
 from SGD.UsingMNIST import UsingMNIST
+from SGD.UsingMNISTwithTensorBoardAndVariable_Scope import UsingMNIST2
 
 
 if __name__ == '__main__':
     
-    mnist = UsingMNIST()
+    #mnist = UsingMNIST()
+    mnist2 = UsingMNIST2()
     
 #     x_data = np.float32(np.random.rand(2, 100)) # 2,100 행렬을 만든다. (0~1 값)
 #     #print(x_data)

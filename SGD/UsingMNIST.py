@@ -55,6 +55,7 @@ class UsingMNIST(object):
         for i in range(10000):
             if(i%1000==0): print(W1.eval(sess))
             batch_xs, batch_ys = mnist.train.next_batch(100)
+
             sess.run(train_step, feed_dict={x: batch_xs, t: batch_ys})
              
         correct_prediction = tf.equal(tf.argmax(y3, 1), tf.argmax(t,1))

@@ -110,3 +110,9 @@ cross_entropy = tf.reduce_mean(-tf.reduce_sum(t*tf.log(y2), reduction_indices=[1
 
 cross_entropy = tf.reduce_mean(-tf.reduce_sum(t*tf.log(tf.clip_by_value(y3, 1e-10, 1.0)), reduction_indices=[1]))
  ```
+
+ ##### 3-Stage Pattern
+ ##### - inference(), loss(), training()
+ ##### - inference() : 예측을 위해 network forward 실행에 필요한 수준의 그래프를 작성
+ ##### - loss() : inference 그래프에 loss를 생성하기 위해 필요한 op를 더한다.
+ ##### - training() : loss 그래프에 계산과 gradient를 적용하기 위한 op를 더한다.

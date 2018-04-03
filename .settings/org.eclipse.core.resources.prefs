@@ -1,3 +1,4 @@
 eclipse.preferences.version=1
 encoding//SGD/Main.py=utf-8
 encoding//SGD/UsingMNIST.py=utf-8
+encoding//SGD/UsingMNISTwithTensorBoardAndVariable_Scope.py=utf-8
