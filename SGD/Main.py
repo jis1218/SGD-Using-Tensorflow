@@ -13,8 +13,6 @@ from SGD.UsingMNIST import UsingMNIST
 if __name__ == '__main__':
     
     mnist = UsingMNIST()
- 
-    
     
 #     x_data = np.float32(np.random.rand(2, 100)) # 2,100 행렬을 만든다. (0~1 값)
 #     #print(x_data)
@@ -49,8 +47,5 @@ if __name__ == '__main__':
 #         sess.run(train)
 #         if step % 20 ==0:
 #             print (step, sess.run(W), sess.run(b))
-    
-    
-    
-    
+        
     pass

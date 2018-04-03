@@ -19,6 +19,8 @@ from Dataset.mnist import *
 ##### TensorFlow는 계산을 위해 고효율의 C++ 백엔드(backend)를 사용합니다. 이 백엔드와의 연결을 위해 TensorFlow는 세션(session)을 사용합니다. 일반적으로 TensorFlow 프로그램은 먼저 그래프를 구성하고, 그 이후 그래프를 세션을 통해 실행하는 방식을 따릅니다. 
 ##### InteractiveSession 클래스를 사용하는 이유 - TensorFlow 코드를 보다 유연하게 작성할 수 있게 해 주는 InteractiveSession 클래스를 사용할 것입니다. 이 클래스는 계산 그래프(computation graph)를 구성하는 작업과 그 그래프를 실행하는 작업을 분리시켜 줍니다. 즉, InteractiveSession을 쓰지 않는다면, 세션을 시작하여 그래프를 실행하기 전에 이미 전체 계산 그래프가 구성되어 있어야 하는 것입니다.
 
+##### tf.reduce_sum은 모든 클래스에 대해 결과를 합하는 함수, tf.reduce_mean은 사용된 이미지들 각각에서 계산된 합의 평균을 구하는 함수입니다.
+
 
 ##### TensorFlow를 써서 간단하게 단일층 layer는 구현하였으나 MultiLayer는 어떻게 구현을 해야하는가?
 ```python
@@ -95,3 +97,16 @@ from Dataset.mnist import *
         W3 = tf.Variable(tf.random_uniform([50,10], -0.08, 0.08))
 ```
 ##### epoch를 1000으로 했을 때 0.9587이 나온다. 10000으로 하면 역시 0.098이 나온다. 왜그럴까??? 고민을 해봐야 한다.
+##### weight를 찍어보니 epoch가 9000일 때 부터 모든 수가 NaN이 나온다. 문제는 loss function의 log 진수가 0이 되기 때문이다. 해결법은 밑에 참조
+##### Actually, it turned out to be something stupid. I'm posting this in case anyone else would run into a similar error.
+```
+cross_entropy = -tf.reduce_sum(y_*tf.log(y_conv))
+```
+##### is actually a horrible way of computing the cross-entropy. In some samples, certain classes could be excluded with certainty after a while, resulting in y_conv=0 for that sample. That's normally not a problem since you're not interested in those, but in the way cross_entropy is written there, it yields 0*log(0) for that particular sample/class. Hence the NaN. 출처 : https://stackoverflow.com/questions/33712178/tensorflow-nan-bug?newreg=c7e31a867765444280ba3ca50b657a07
+
+##### Cross Entropy의 코드를 다음과 같이 고쳤다. 결국 문제 해결(log 안의 값이 0이 되면 안된다.)
+```python
+cross_entropy = tf.reduce_mean(-tf.reduce_sum(t*tf.log(y2), reduction_indices=[1]))
+
+cross_entropy = tf.reduce_mean(-tf.reduce_sum(t*tf.log(tf.clip_by_value(y3, 1e-10, 1.0)), reduction_indices=[1]))
+ ```
